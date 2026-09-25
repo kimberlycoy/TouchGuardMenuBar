@@ -70,12 +70,15 @@ final class AppModel: ObservableObject {
             )
             window.title = "TouchGuard Menu Bar Setup"
             window.isReleasedWhenClosed = false
-            let controller = NSHostingController(rootView: SetupView(model: self) { [weak self] in
+            let hostingView = NSHostingView(rootView: SetupView(model: self) { [weak self] in
                 self?.setupWindow?.close()
             })
-            // Resize the window when the view switches to "You're All Set".
-            controller.sizingOptions = [.preferredContentSize]
-            window.contentViewController = controller
+            // Size the window once and never resize it. Letting the hosting
+            // view drive the window size caused a layout loop that crashed
+            // the app (SetupView keeps its size fixed across both states).
+            hostingView.sizingOptions = []
+            window.contentView = hostingView
+            window.setContentSize(hostingView.fittingSize)
             window.center()
             setupWindow = window
         }

@@ -16,19 +16,24 @@ struct SetupView: View {
     let close: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            if model.hasPermission {
-                granted
-            } else {
-                instructions
-            }
+        // Both states are always laid out, with the inactive one hidden, so
+        // the view (and window) stays the same size when access is granted.
+        ZStack(alignment: .topLeading) {
+            instructions
+                .opacity(model.hasPermission ? 0 : 1)
+                .allowsHitTesting(!model.hasPermission)
+                .accessibilityHidden(model.hasPermission)
+            granted
+                .opacity(model.hasPermission ? 1 : 0)
+                .allowsHitTesting(model.hasPermission)
+                .accessibilityHidden(!model.hasPermission)
         }
         .padding(24)
         .frame(width: 460)
     }
 
     private var instructions: some View {
-        Group {
+        VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 12) {
                 Image(systemName: "hand.raised.fill")
                     .font(.system(size: 32))
@@ -46,13 +51,8 @@ struct SetupView: View {
                 Step(number: 3, text: "If it isn't in the list, click **+** below the list, choose **Applications → TouchGuard Menu Bar**, click **Open**, then turn its switch on.")
             }
 
-            HStack {
-                ProgressView()
-                    .controlSize(.small)
-                Text("Waiting for access… this window updates automatically.")
-                    .foregroundStyle(.secondary)
-                Spacer()
-            }
+            Text("Waiting for access… this window updates automatically.")
+                .foregroundStyle(.secondary)
 
             HStack {
                 Button("Later") {
@@ -68,7 +68,7 @@ struct SetupView: View {
     }
 
     private var granted: some View {
-        Group {
+        VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 12) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 32))
@@ -80,6 +80,8 @@ struct SetupView: View {
             Text("TouchGuard Menu Bar is running. Look for the hand icon in the menu bar to pause it, change the block time, or turn on **Launch at Login**.")
                 .fixedSize(horizontal: false, vertical: true)
 
+            Spacer(minLength: 0)
+
             HStack {
                 Spacer()
                 Button("Done") {
@@ -88,6 +90,8 @@ struct SetupView: View {
                 .keyboardShortcut(.defaultAction)
             }
         }
+        // Fill the height set by the (taller) instructions so Done sits at the bottom.
+        .frame(maxHeight: .infinity, alignment: .top)
     }
 }
 
