@@ -21,12 +21,34 @@ macOS 13 (Ventura) or later, Apple Silicon or Intel.
 
 ### From the installer
 
-1. Download `TouchGuardMenuBar-<version>.pkg` from the [latest release](https://github.com/kimberlycoy/TouchGuardMenuBar/releases/latest) and double-click it.
-2. The installer puts **TouchGuard Menu Bar** in `/Applications` and starts it. A hand icon appears in the menu bar.
-3. When macOS asks, allow Accessibility access: **System Settings → Privacy & Security → Accessibility**, then turn on **TouchGuard Menu Bar**.
-4. Optional: choose **Launch at Login** from the menu bar icon.
+Installing takes three parts: download, get past the macOS security check, then allow Accessibility access.
 
-The installer isn't signed with an Apple Developer ID. If macOS blocks it, go to **System Settings → Privacy & Security** and click **Open Anyway**.
+#### 1. Download
+
+Download `TouchGuardMenuBar-<version>.pkg` from the [latest release](https://github.com/kimberlycoy/TouchGuardMenuBar/releases/latest).
+
+#### 2. Open the installer ("Open Anyway")
+
+The installer isn't signed with a paid Apple Developer ID, so the first time you open it macOS blocks it with a message like *"TouchGuardMenuBar-1.1.pkg" Not Opened*. That's expected. To allow it:
+
+1. Double-click the `.pkg` file. When macOS says it can't be opened, click **Done** (not Move to Trash).
+2. Open **System Settings** (Apple menu → System Settings…) and click **Privacy & Security** in the sidebar.
+3. Scroll **all the way down** the right-hand side to the **Security** section. You'll see a line saying the TouchGuardMenuBar `.pkg` "was blocked to protect your Mac", with an **Open Anyway** button next to it.
+4. Click **Open Anyway**. macOS asks you to confirm (click **Open Anyway** again) and to enter your password or use Touch ID. The installer then opens.
+
+The **Open Anyway** button only appears for about an hour after you try to open the file. If you don't see it, double-click the `.pkg` again and go back to step 2.
+
+Older macOS versions (before macOS 15 Sequoia) also let you Control-click the file and choose **Open**. That shortcut no longer works on current macOS.
+
+#### 3. Install and allow Accessibility access
+
+1. Follow the installer. It puts **TouchGuard Menu Bar** in Applications and starts it. A hand icon appears in the menu bar.
+2. TouchGuard Menu Bar opens a setup window, and macOS may show its own prompt. Click **Open System Settings** in the macOS prompt, or **Open Accessibility Settings** in the setup window. Both go to the same place.
+3. In **Privacy & Security → Accessibility**, find **TouchGuard Menu Bar** in the list and turn its switch **on**. Enter your password or use Touch ID if asked.
+4. If it isn't in the list, click **+** below the list, choose **Applications → TouchGuard Menu Bar**, click **Open**, then turn its switch on.
+5. Within a couple of seconds the setup window changes to **You're All Set** and the menu bar icon becomes a solid hand.
+
+Optional: choose **Launch at Login** from the menu bar icon so it starts automatically.
 
 ### Build from source
 

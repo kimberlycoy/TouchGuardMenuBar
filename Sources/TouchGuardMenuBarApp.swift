@@ -36,6 +36,7 @@ final class AppModel: ObservableObject {
     static let intervals: [Double] = [0.1, 0.15, 0.2, 0.3, 0.5, 0.75, 1.0]
 
     private var permissionTimer: Timer?
+    private var setupWindow: NSWindow?
 
     init() {
         let defaults = UserDefaults.standard
@@ -45,13 +46,42 @@ final class AppModel: ObservableObject {
         blocker.blockInterval = blockInterval
         launchAtLogin = SMAppService.mainApp.status == .enabled
 
-        // Ask for Accessibility permission on first launch (macOS shows its
-        // own prompt), then keep checking until it's granted.
+        // Ask for Accessibility permission on first launch. macOS shows its
+        // own prompt (which also adds the app to the Accessibility list); the
+        // setup window explains what to do. Keep checking until it's granted.
         hasPermission = ClickBlocker.hasPermission(prompt: true)
         apply()
         if !hasPermission {
             startPermissionPolling()
+            // Wait for the app to finish launching before opening a window.
+            DispatchQueue.main.async { [weak self] in
+                self?.showSetup()
+            }
         }
+    }
+
+    func showSetup() {
+        if setupWindow == nil {
+            let window = NSWindow(
+                contentRect: .zero,
+                styleMask: [.titled, .closable],
+                backing: .buffered,
+                defer: false
+            )
+            window.title = "TouchGuard Menu Bar Setup"
+            window.isReleasedWhenClosed = false
+            let controller = NSHostingController(rootView: SetupView(model: self) { [weak self] in
+                self?.setupWindow?.close()
+            })
+            // Resize the window when the view switches to "You're All Set".
+            controller.sizingOptions = [.preferredContentSize]
+            window.contentViewController = controller
+            window.center()
+            setupWindow = window
+        }
+        // Menu bar apps aren't frontmost by default; bring the window forward.
+        NSApp.activate(ignoringOtherApps: true)
+        setupWindow?.makeKeyAndOrderFront(nil)
     }
 
     private func apply() {
@@ -148,8 +178,8 @@ struct MenuContent: View {
         Divider()
 
         if !model.hasPermission {
-            Button("Open Accessibility Settings…") {
-                model.openAccessibilitySettings()
+            Button("Set Up Accessibility Access…") {
+                model.showSetup()
             }
             Divider()
         }
