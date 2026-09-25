@@ -21,7 +21,7 @@ macOS 13 (Ventura) or later, Apple Silicon or Intel.
 
 ### From the installer
 
-1. Download `TouchGuardMenuBar-<version>.pkg` and double-click it.
+1. Download `TouchGuardMenuBar-<version>.pkg` from the [latest release](https://github.com/kimberlycoy/TouchGuardMenuBar/releases/latest) and double-click it.
 2. The installer puts **TouchGuard Menu Bar** in `/Applications` and starts it. A hand icon appears in the menu bar.
 3. When macOS asks, allow Accessibility access: **System Settings → Privacy & Security → Accessibility**, then turn on **TouchGuard Menu Bar**.
 4. Optional: choose **Launch at Login** from the menu bar icon.
