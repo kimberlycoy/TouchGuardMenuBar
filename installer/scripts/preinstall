@@ -1,0 +1,4 @@
+#!/bin/bash
+# Quit a running copy so it can be replaced.
+pkill -f "TouchGuard Menu Bar.app/Contents/MacOS/TouchGuardMenuBar" 2>/dev/null || true
+exit 0

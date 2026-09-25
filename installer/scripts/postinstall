@@ -1,0 +1,8 @@
+#!/bin/bash
+# Launch the app for the logged-in user (the installer itself runs as root).
+CONSOLE_USER="$(stat -f%Su /dev/console)"
+if [ -n "$CONSOLE_USER" ] && [ "$CONSOLE_USER" != "root" ]; then
+    CONSOLE_UID="$(id -u "$CONSOLE_USER")"
+    launchctl asuser "$CONSOLE_UID" sudo -u "$CONSOLE_USER" open "/Applications/TouchGuard Menu Bar.app" || true
+fi
+exit 0
