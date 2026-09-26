@@ -43,10 +43,10 @@ Older macOS versions (before macOS 15 Sequoia) also let you Control-click the fi
 #### 3. Install and allow Accessibility access
 
 1. Follow the installer. It puts **TouchGuard Menu Bar** in Applications and starts it. A hand icon appears in the menu bar.
-2. TouchGuard Menu Bar opens a setup window, and macOS may show its own prompt. Click **Open System Settings** in the macOS prompt, or **Open Accessibility Settings** in the setup window. Both go to the same place.
+2. macOS shows a prompt saying TouchGuard Menu Bar "would like to control this computer using accessibility features." Click **Open System Settings**. (If you missed the prompt, choose **Open Accessibility Settings…** from the menu bar icon.)
 3. In **Privacy & Security → Accessibility**, find **TouchGuard Menu Bar** in the list and turn its switch **on**. Enter your password or use Touch ID if asked.
 4. If it isn't in the list, click **+** below the list, choose **Applications → TouchGuard Menu Bar**, click **Open**, then turn its switch on.
-5. Within a couple of seconds the setup window changes to **You're All Set** and the menu bar icon becomes a solid hand.
+5. Within a couple of seconds the menu bar icon becomes a solid hand.
 
 Optional: choose **Launch at Login** from the menu bar icon so it starts automatically.
 
