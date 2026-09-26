@@ -32,9 +32,21 @@ done
 lipo -create -output "$APP/Contents/MacOS/$EXE" "$BUILD/$EXE-arm64" "$BUILD/$EXE-x86_64"
 rm -f "$BUILD/$EXE-arm64" "$BUILD/$EXE-x86_64"
 
-# Ad-hoc signature. Note: macOS ties the Accessibility permission to the
-# signature, so after each rebuild you may need to allow it again.
-codesign --force --sign - "$APP"
+# Sign with a stable certificate so macOS recognizes each new build as the
+# same app and keeps its Accessibility permission across updates. A free
+# self-signed "Code Signing" certificate in your login keychain is enough
+# (Keychain Access > Certificate Assistant > Create a Certificate). Override
+# the name with SIGN_IDENTITY=... ./build.sh
+SIGN_IDENTITY="${SIGN_IDENTITY:-Kimberly Coy Code Signing}"
+if security find-identity -p codesigning | grep -qF "\"$SIGN_IDENTITY\""; then
+    codesign --force --sign "$SIGN_IDENTITY" "$APP"
+else
+    # Ad-hoc signatures change with every build, so macOS treats each build
+    # as a new app and the Accessibility permission has to be granted again.
+    echo "warning: signing certificate \"$SIGN_IDENTITY\" not found; using an ad-hoc signature." >&2
+    echo "warning: Accessibility permission won't carry over to this build." >&2
+    codesign --force --sign - "$APP"
+fi
 
 echo "Built $APP"
 
