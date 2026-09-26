@@ -1,4 +1,9 @@
 #!/bin/bash
+# Stop any copy that started during the install (for example, relaunched by
+# Launch at Login). Otherwise "open" below would just bring that old copy
+# forward instead of starting the new version.
+"$(dirname "$0")/stop-running-app"
+
 # Launch the app for the logged-in user (the installer itself runs as root).
 CONSOLE_USER="$(stat -f%Su /dev/console)"
 if [ -n "$CONSOLE_USER" ] && [ "$CONSOLE_USER" != "root" ]; then

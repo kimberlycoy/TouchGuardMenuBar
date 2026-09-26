@@ -1,0 +1,30 @@
+#!/bin/bash
+# Stops every running copy of TouchGuard Menu Bar and waits until they've
+# actually quit. Asks politely first, then force-quits anything left after
+# a few seconds. Used by both preinstall and postinstall.
+
+PATTERN="TouchGuard Menu Bar.app/Contents/MacOS/TouchGuardMenuBar"
+
+if ! pgrep -f "$PATTERN" > /dev/null; then
+    exit 0
+fi
+
+echo "TouchGuard Menu Bar: stopping running copy (PIDs: $(pgrep -f "$PATTERN" | tr '\n' ' '))"
+pkill -TERM -f "$PATTERN"
+
+# Wait up to 5 seconds for it to quit.
+for _ in $(seq 1 50); do
+    if ! pgrep -f "$PATTERN" > /dev/null; then
+        echo "TouchGuard Menu Bar: stopped"
+        exit 0
+    fi
+    sleep 0.1
+done
+
+echo "TouchGuard Menu Bar: still running after 5 seconds, force-quitting"
+pkill -KILL -f "$PATTERN"
+sleep 0.5
+if pgrep -f "$PATTERN" > /dev/null; then
+    echo "TouchGuard Menu Bar: warning: couldn't stop PIDs $(pgrep -f "$PATTERN" | tr '\n' ' ')"
+fi
+exit 0
